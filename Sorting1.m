@@ -72,7 +72,7 @@ end
 [rh,ch] = size(HU);
 
 % House Happiness
-Student_List
+Final = sortrows(Student_List,6)
 GR_happy = sum(GR(:,2))/rg
 SL_happy = sum(SL(:,3))/rs
 RA_happy = sum(RA(:,4))/rr
