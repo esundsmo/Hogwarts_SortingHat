@@ -128,6 +128,7 @@ function [GR,SL,RA,HU] = REsort(GR,SL,RA,HU,REmat)
     for m = 1:1:row
         [smax(m),pos(m)] = max(REmat(m,2:5));
     end
+    pos
     % +1 because we don't want to overwrite the last value
     [Gr,Gc] = size(GR); Gr = Gr+1;
     [Sr,Sc] = size(SL); Sr = Sr+1;
@@ -171,6 +172,9 @@ while x==6
     [rS,cS] = size(SL);
     [rR,cS] = size(RA);
     [rH,cH] = size(HU);
+    rG
+    rS
+    rH
     if rG == rS == rR == rH == (n/4)
         % Final Answer: House Happiness
         Final = sortrows(Student_List,6)
@@ -182,8 +186,16 @@ while x==6
     else
         [GR,SL,RA,HU,rejects] = remove(GR,SL,RA,HU);
         [GR,SL,RA,HU] = REsort(GR,SL,RA,HU,rejects);
-        break % This will be removéd
-        
+        %%% Ok, fun fact about this break statement. Without it,  matlab
+        %%% says that the varible pos is not defined in the REsort
+        %%% function, which is total and utter bullshit, because REsort
+        %%% works just fine on its own, thank you very much.
+        %%%
+        %%% Nevermind, we printed everything, and the issue is actually
+        %%% that after all the houses have equal numbers of students,
+        %%% MATLAB tried to run the REsort code again, and fails because
+        %%% it's taking in a rejection matrix of size zero.
+%         break % This will be removéd
     end
 end
 
