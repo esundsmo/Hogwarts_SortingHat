@@ -1,4 +1,4 @@
-function Sorting2()
+function Sorting3()
 clc;
 % Use ctrl+enter to run
 % Generates a matrix of numbered students with their house aptitudes
