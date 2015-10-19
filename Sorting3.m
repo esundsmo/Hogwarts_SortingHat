@@ -1,10 +1,11 @@
 function Sorting3()
 clc;
-% Use ctrl+enter to run
 % Generates a matrix of numbered students with their house aptitudes
 % House poistioning is officialy [G S R H]
 
-n = 20; % n is the number of incoming students
+total = 100; % n is the number of incoming students %%%FOR NOW, N%4 == 0
+remain = mod(total,4);
+n = total-remain;
 
 SA = zeros(n,6);
 
@@ -57,8 +58,46 @@ Student_List = SA;
 %    19.0000    10    9    6    5   83.0000;...
 %    20.0000    10    2    4    1   82.0000]; %For Testing
 
+% Maximum Possible House Happiness
+max_hap=[];
+for y = 1:4
+   temp_house = sortrows(Student_List,1+y); % sorts matrix by highest for house
+   numerator = 0;
+   for w = ((3*n/4)+1):n
+       numerator = numerator+temp_house(w,y+1);
+   end
+   val = numerator/(n/4); % average of 5 highest ranked students
+   max_hap(y) = val;
+end
 
+%% Running Stuff
+x=6; % stupid variable to keep the while loop
+% Student_List
 [GR,SL,RA,HU,Student_List] = file(Student_List);
+while x<=8
+    [rG,cG] = size(GR);
+    [rS,cS] = size(SL);
+    [rR,cS] = size(RA);
+    [rH,cH] = size(HU);
+  
+    if rH==(n/4) && rG==(n/4) && rS==(n/4) && rR==(n/4) 
+        % Final Answer: House Happiness
+        [GR;0,0,0,0,0,0;SL;0,0,0,0,0,0;RA;0,0,0,0,0,0;HU]
+        GR_happy = sum(GR(:,2))/rG;
+        SL_happy = sum(SL(:,3))/rS;
+        RA_happy = sum(RA(:,4))/rR;
+        HU_happy = sum(HU(:,5))/rH;
+        Happy = [max_hap;GR_happy,SL_happy,RA_happy,HU_happy]
+        break
+    else
+        [GRmid,SLmid,RAmid,HUmid,rejects] = remove2(GR,SL,RA,HU);
+        [GR,SL,RA,HU] = REsort(GRmid,SLmid,RAmid,HUmid,rejects);
+%         x=x+1;
+%         break
+    end
+end
+
+%% Functions
 % Initial Sort
 function [GR,SL,RA,HU,MAT] = file(MAT)
     % Takes the maximun house value for each student
@@ -86,46 +125,6 @@ function [GR,SL,RA,HU,MAT] = file(MAT)
     end
 end
 
-% Function for removing extras
-function [GR,SL,RA,HU,rejects] = remove(GR,SL,RA,HU)
-    rejects = [];
-    limit = (n/4)+1;
-    reject_pos = 1;
-    for q = 1:n
-        % Recalculating because otherwise this thing will error
-        [rg,cg] = size(GR);
-        [rs,cs] = size(SL);
-        [rr,cr] = size(RA);
-        [rh,ch] = size(HU);
-        GR = sortrows(GR,2);
-        SL = sortrows(SL,3);
-        RA = sortrows(RA,4);
-        HU = sortrows(HU,5);
-        if rg >= limit
-            rejects(reject_pos,:) = GR(1,:);
-            rejects(reject_pos,2) = 0; % To eliminate the highest value
-            GR(1,:) = [];
-            reject_pos = reject_pos +1;
-        elseif rs >= limit
-            rejects(reject_pos,:) = SL(1,:);
-            rejects(reject_pos,3) = 0; % To eliminate the highest value
-            SL(1,:) = [];
-            reject_pos = reject_pos +1;
-        elseif rr >= limit
-            rejects(reject_pos,:) = RA(1,:);
-            rejects(reject_pos,4) = 0; % To eliminate the highest value
-            RA(1,:) = [];
-            reject_pos = reject_pos +1;
-        elseif rh >= limit
-            rejects(reject_pos,:) = HU(1,:);
-            rejects(reject_pos,5) = 0; % To eliminate the highest value
-            HU(1,:) = [];
-            reject_pos = reject_pos +1;
-        else
-            continue
-        end
-    end
-end
 % New Removal Function
 function [GR,SL,RA,HU,rejects] = remove2(GR,SL,RA,HU)
     rejects = [];
@@ -166,7 +165,7 @@ function [GR,SL,RA,HU,rejects] = remove2(GR,SL,RA,HU)
             for s = 1:rs
                 [max1(s),pos1(s)] = max(SL(s,2:5));
                 tempSL = SL; % So we can ask the secondary maximum
-                tempSL(s,2) = 0; % Negates the actual maximum
+                tempSL(s,3) = 0; % Negates the actual maximum
                 [max2(s),pos2(s)] = max(tempSL(s,2:5)); % Secondary Max
                 dif(s) = max1(s)-max2(s);
                 snum(s) = SL(s,1);
@@ -190,7 +189,7 @@ function [GR,SL,RA,HU,rejects] = remove2(GR,SL,RA,HU)
             for r = 1:rr
                 [max1(r),pos1(r)] = max(RA(r,2:5));
                 tempRA = RA; % So we can ask the secondary maximum
-                tempRA(r,2) = 0; % Negates the actual maximum
+                tempRA(r,4) = 0; % Negates the actual maximum
                 [max2(r),pos2(r)] = max(tempRA(r,2:5)); % Secondary Max
                 dif(r) = max1(r)-max2(r);
                 snum(r) = RA(r,1);
@@ -214,7 +213,7 @@ function [GR,SL,RA,HU,rejects] = remove2(GR,SL,RA,HU)
             for h = 1:rh
                 [max1(h),pos1(h)] = max(HU(h,2:5));
                 tempHU = HU; % So we can ask the secondary maximum
-                tempHU(h,2) = 0; % Negates the actual maximum
+                tempHU(h,5) = 0; % Negates the actual maximum
                 [max2(h),pos2(h)] = max(tempHU(h,2:5)); % Secondary Max
                 dif(h) = max1(h)-max2(h);
                 snum(h) = HU(h,1);
@@ -237,7 +236,6 @@ function [GR,SL,RA,HU,rejects] = remove2(GR,SL,RA,HU)
         end
     end
 end
-
 
 % REcursive Sorting?
 function [GR,SL,RA,HU] = REsort(GR,SL,RA,HU,REmat)
@@ -268,31 +266,6 @@ function [GR,SL,RA,HU] = REsort(GR,SL,RA,HU,REmat)
             HU(Hr,:) = REmat(h,:);
             Hr = Hr + 1;
         end
-    end
-end
-
-%% Now To Size Check...
-x=6; % stupid variable to keep the while loop
-% Student_List
-while x<=8
-    [rG,cG] = size(GR);
-    [rS,cS] = size(SL);
-    [rR,cS] = size(RA);
-    [rH,cH] = size(HU);
-  
-    if rH==(n/4) && rG==(n/4) && rS==(n/4) && rR==(n/4) 
-        % Final Answer: House Happiness
-        [GR;0,0,0,0,0,0;SL;0,0,0,0,0,0;RA;0,0,0,0,0,0;HU]
-        GR_happy = sum(GR(:,2))/rG
-        SL_happy = sum(SL(:,3))/rS
-        RA_happy = sum(RA(:,4))/rR
-        HU_happy = sum(HU(:,5))/rH
-        break
-    else
-        [GRmid,SLmid,RAmid,HUmid,rejects] = remove2(GR,SL,RA,HU);
-        [GR,SL,RA,HU] = REsort(GRmid,SLmid,RAmid,HUmid,rejects);
-%         x=x+1;
-%         break
     end
 end
 
