@@ -3,7 +3,7 @@ clc;
 % Generates a matrix of numbered students with their house aptitudes
 % House poistioning is officialy [G S R H]
 
-total = 23; % n is the number of incoming students %%%FOR NOW, N%4 == 0
+total = 23; % n is the number of incoming students
 remain = mod(total,4);
 n = total-remain;
 
@@ -85,14 +85,7 @@ while x<=8
     [rS,cS] = size(SL);
     [rR,cS] = size(RA);
     [rH,cH] = size(HU);
-%     if rH==(n/4)||rH==((n/4)+1)...
-%             && rG==(n/4)||rG==((n/4)+1)...
-%             && rS==(n/4)||rS==((n/4)+1)...
-%             && rR==(n/4)||rR==((n/4)+1)
-    if rH<=((n/4)+1)...
-            && rG<=((n/4)+1)...
-            && rS<=((n/4)+1)...
-            && rR<=((n/4)+1)
+    if rH<=((n/4)+1)&& rG<=((n/4)+1)&& rS<=((n/4)+1)&& rR<=((n/4)+1)
         % Final Answer: House Happiness
         [GR;0,0,0,0,0,0;SL;0,0,0,0,0,0;RA;0,0,0,0,0,0;HU]
         GR_happy = sum(GR(:,2))/rG;
