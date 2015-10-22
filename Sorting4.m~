@@ -2,9 +2,9 @@ function Sorting4()
 clc;
 % Generates a matrix of numbered students with their house aptitudes
 % House poistioning is officialy [G S R H]
-%%% Note: If the code errors, just run it again. It will work. Promise.
+%%% Note: I
 
-total = 144; % n is the number of incoming students
+total = 23; % n is the number of incoming students
 remain = mod(total,4);
 n = total-remain;
 
@@ -70,7 +70,7 @@ max_hap=[];
 for y = 1:4
    temp_house = sortrows(Student_List,1+y); % sorts matrix by highest for house
    numerator = 0;
-   for w = ((total-round(total/4))+1):total
+   for w = ((3*round(total/4))+1):total
        numerator = numerator+temp_house(w,y+1);
    end
    val = numerator/round(total/4); % average of 5 highest ranked students
@@ -96,8 +96,8 @@ while x<=8
         Happy = [max_hap;GR_happy,SL_happy,RA_happy,HU_happy]
         break
     else
-        [GRmid,SLmid,RAmid,HUmid,rejects] = remove2(GR,SL,RA,HU);
-        [GR,SL,RA,HU] = REsort(GRmid,SLmid,RAmid,HUmid,rejects);
+        [GRmid,SLmid,RAmid,HUmid,rejects] = remove2(GR,SL,RA,HU)
+        [GR,SL,RA,HU] = REsort(GRmid,SLmid,RAmid,HUmid,rejects)
 %         x=x+1;
 %         break
     end
